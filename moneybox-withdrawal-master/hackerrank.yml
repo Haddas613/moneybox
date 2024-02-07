@@ -1,0 +1,15 @@
+version: 1.0
+configuration:
+  has_webserver: false
+  #readonly_paths:
+  #  - TestProject.Tests/IntegrationTests.cs
+  #  - TestProject.WebAPI/Controllers/TestMiddlewareController.cs
+  ide_config:
+    default_open_files: []
+      #- TestProject.WebAPI/Controllers/FileController.cs
+    project_menu:
+      build: cd Moneybox.App;dotnet build
+      #test: rm -rf reports && dotnet build && dotnet test --logger xunit --results-directory ./reports/
+#  scoring:
+#    command: rm -rf reports && dotnet build && dotnet test --logger xunit --results-directory ./reports/
+#    files: [reports/TestResults.xml]
