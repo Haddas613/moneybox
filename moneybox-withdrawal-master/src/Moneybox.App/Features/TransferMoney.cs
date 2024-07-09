@@ -9,19 +9,9 @@ public class TransferMoney(IAccountRepository accountRepository, INotificationSe
 {
     public void Execute(Guid fromAccountId, Guid toAccountId, decimal amount)
     {
-        var from = accountRepository.GetAccountById(fromAccountId);
+        WithdrawMoney wdm = new WithdrawMoney(accountRepository, notificationService);
+        wdm.Execute(fromAccountId, amount);
         var to = accountRepository.GetAccountById(toAccountId);
-
-        var fromBalance = from.Balance - amount;
-        if (fromBalance < 0m)
-        {
-            throw new InvalidOperationException("Insufficient funds to make transfer");
-        }
-
-        if (fromBalance < 500m)
-        {
-            notificationService.NotifyFundsLow(from.User.Email);
-        }
 
         var paidIn = to.PaidIn + amount;
         if (paidIn > Account.PayInLimit)
@@ -34,13 +24,9 @@ public class TransferMoney(IAccountRepository accountRepository, INotificationSe
             notificationService.NotifyApproachingPayInLimit(to.User.Email);
         }
 
-        from.Balance -= amount;
-        from.Withdrawn -= amount;
-
         to.Balance += amount;
         to.PaidIn += amount;
-
-        accountRepository.Update(from);
+        
         accountRepository.Update(to);
     }
 }
